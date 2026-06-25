@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rajshahi College | News &amp; Notice Portal</title>
+<meta name="description" content="The official student-run news and notice portal of Rajshahi College — campus news, notices, results, admission updates, sports and events since 1873.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RAJSHAHI COLLEGE — NEWS & NOTICE PORTAL
+   Token system, layout, components, responsive rules
+   ============================================================ */
+
+:root{
+  /* color */
+  --maroon-900:#430F1B;
+  --maroon-800:#5A1522;
+  --maroon-700:#7A1F2E;
+  --maroon-600:#8F2638;
+  --maroon-500:#A8334A;
+  --gold-700:#9C7126;
+  --gold-600:#B8862E;
+  --gold-300:#E3C275;
+  --teal-700:#1F5C57;
+  --teal-600:#256E68;
+  --paper:#FAF8F3;
+  --paper-dim:#F1ECE0;
+  --paper-card:#FFFFFF;
+  --ink-900:#211D1A;
+  --ink-700:#3D372F;
+  --ink-500:#6B6357;
+  --line:#E1DACB;
+  --line-strong:#C9BFA6;
+  --shadow-sm:0 1px 3px rgba(33,29,26,.08);
+  --shadow-md:0 10px 28px rgba(67,15,27,.10);
+
+  /* type */
+  --f-display:'Fraunces', 'Georgia', serif;
+  --f-body:'Source Serif 4', Georgia, serif;
+  --f-ui:'IBM Plex Sans', -apple-system, sans-serif;
+  --f-bn:'Noto Serif Bengali', serif;
+
+  /* spacing */
+  --sp-1:.25rem; --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem;
+  --sp-5:1.5rem; --sp-6:2rem; --sp-7:3rem; --sp-8:4.5rem;
+
+  --radius-sm:3px; --radius-md:6px;
+  --maxw:1240px;
+}
+
+body.dark{
+  --paper:#1B1411;
+  --paper-dim:#241B16;
+  --paper-card:#2A1F19;
+  --ink-900:#F3ECE1;
+  --ink-700:#D9CFC0;
+  --ink-500:#AFA28C;
+  --line:#3C2E25;
+  --line-strong:#4C3B2E;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.35);
+  --shadow-md:0 10px 28px rgba(0,0,0,.45);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{font-size:100%; scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+}
+body{
+  margin:0;
+  font-family:var(--f-body);
+  background:var(--paper);
+  color:var(--ink-900);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  transition:background .25s ease, color .25s ease;
+}
+img,svg{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+ul,ol{margin:0; padding:0; list-style:none;}
+button,input{font-family:inherit; color:inherit;}
+button{cursor:pointer; background:none; border:none;}
+h1,h2,h3,h4{margin:0; font-family:var(--f-display); font-weight:700;}
+p{margin:0;}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 var(--sp-5);}
+
+:focus-visible{outline:2.5px solid var(--gold-600); outline-offset:2px; border-radius:2px;}
+
+.skip-link{
+  position:absolute; left:-999px; top:0; background:var(--maroon-700); color:#fff;
+  padding:.75rem 1.25rem; z-index:999; font-family:var(--f-ui); font-weight:600;
+}
+.skip-link:focus{left:var(--sp-4); top:var(--sp-4);}
+
+/* ============================ UTILITY BAR ============================ */
+.util-bar{
+  background:var(--maroon-900); color:#EFE3D6; font-family:var(--f-ui);
+  font-size:.78rem;
+}
+.util-inner{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--sp-4);
+  padding:.5rem 0; flex-wrap:wrap;
+}
+.util-left{display:flex; align-items:center; gap:var(--sp-4); flex-wrap:wrap;}
+.util-date{display:flex; flex-direction:column; line-height:1.25;}
+.util-date .bn{font-family:var(--f-bn); font-size:.82rem; color:var(--gold-300);}
+.util-tagline{opacity:.8; display:none;}
+.util-right{display:flex; align-items:center; gap:var(--sp-3);}
+.util-btn{
+  display:flex; align-items:center; gap:.3rem; color:#EFE3D6; opacity:.9;
+  font-family:var(--f-ui); font-size:.78rem; font-weight:600; padding:.2rem .4rem;
+  border-radius:var(--radius-sm);
+}
+.util-btn:hover{opacity:1; background:rgba(255,255,255,.08);}
+.util-btn svg{width:15px; height:15px;}
+.fontsize-group{display:flex; align-items:center; gap:2px; border:1px solid rgba(255,255,255,.25); border-radius:var(--radius-sm); overflow:hidden;}
+.fontsize-group button{padding:.25rem .5rem; font-size:.72rem; font-weight:700; color:#EFE3D6;}
+.fontsize-group button:hover{background:rgba(255,255,255,.12);}
+.lang-toggle{font-weight:700; letter-spacing:.02em;}
+.lang-toggle .bn{font-family:var(--f-bn);}
+.social-mini{display:flex; gap:.5rem;}
+.social-mini a svg{width:14px; height:14px; opacity:.85;}
+.social-mini a:hover svg{opacity:1;}
+
+/* ============================ MASTHEAD ============================ */
+.masthead{background:var(--paper); border-bottom:1px solid var(--line); padding:var(--sp-6) 0 var(--sp-5);}
+.masthead-inner{display:flex; align-items:center; justify-content:center; gap:var(--sp-5); text-align:center;}
+.seal{flex-shrink:0; width:72px; height:72px;}
+.masthead-text{display:flex; flex-direction:column; align-items:center;}
+.masthead-text .eyebrow{
+  font-family:var(--f-ui); font-size:.7rem; letter-spacing:.22em; font-weight:600;
+  color:var(--gold-700); text-transform:uppercase; margin-bottom:.35rem;
+}
+.masthead-title{
+  font-size:clamp(2.1rem, 6vw, 3.6rem); letter-spacing:-.01em; color:var(--maroon-800);
+  line-height:1; font-weight:900; white-space:nowrap;
+}
+.masthead-bn{font-family:var(--f-bn); font-size:1.15rem; color:var(--ink-700); margin-top:.4rem; font-weight:600;}
+.masthead-sub{font-family:var(--f-ui); font-size:.82rem; color:var(--ink-500); margin-top:.3rem; letter-spacing:.02em;}
+.masthead-sub strong{color:var(--ink-700);}
+
+/* ============================ NAV ============================ */
+.navbar{background:var(--maroon-700); position:sticky; top:0; z-index:60; box-shadow:0 2px 10px rgba(0,0,0,.12);}
+body.dark .navbar{background:var(--maroon-900);}
+.nav-inner{display:flex; align-items:center; justify-content:space-between; padding:0;}
+.nav-list{display:flex; flex-wrap:wrap;}
+.nav-list a{
+  display:block; padding:.85rem 1rem; font-family:var(--f-ui); font-size:.8rem;
+  font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:#F4E8D8;
+  border-bottom:3px solid transparent;
+}
+.nav-list a:hover, .nav-list a.active{border-bottom-color:var(--gold-600); background:rgba(0,0,0,.12); color:#fff;}
+.nav-search-btn{
+  display:flex; align-items:center; gap:.4rem; color:#F4E8D8; font-family:var(--f-ui);
+  font-size:.78rem; font-weight:600; padding:.6rem 1rem; flex-shrink:0;
+}
+.nav-search-btn svg{width:16px; height:16px;}
+.nav-search-btn:hover{color:#fff;}
+.hamburger{display:none; padding:.85rem 1rem; flex-shrink:0;}
+.hamburger svg{width:22px; height:22px; color:#F4E8D8;}
+.nav-overlay{display:none;}
+
+/* ============================ TICKER ============================ */
+.ticker-bar{background:var(--gold-600); color:var(--maroon-900); overflow:hidden;}
+body.dark .ticker-bar{background:var(--gold-700); color:#1B1411;}
+.ticker-inner{display:flex; align-items:center;}
+.ticker-badge{
+  flex-shrink:0; background:var(--maroon-800); color:#fff; font-family:var(--f-ui);
+  font-weight:700; font-size:.72rem; letter-spacing:.08em; padding:.45rem .9rem;
+  display:flex; align-items:center; gap:.4rem; z-index:2;
+}
+.ticker-badge .dot{width:7px; height:7px; border-radius:50%; background:#fff; animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;} 50%{opacity:.3;}}
+.ticker-viewport{flex:1; overflow:hidden; padding:.45rem 0; position:relative;}
+.ticker-track{display:flex; gap:3.5rem; white-space:nowrap; width:max-content; animation:marquee 32s linear infinite;}
+.ticker-viewport:hover .ticker-track, .ticker-viewport:focus-within .ticker-track{animation-play-state:paused;}
+@keyframes marquee{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+.ticker-track a{font-family:var(--f-ui); font-size:.82rem; font-weight:600;}
+.ticker-track a::before{content:"●"; font-size:.5rem; margin-right:.6rem; vertical-align:middle; opacity:.6;}
+
+/* ============================ MAIN LAYOUT ============================ */
+main{display:block;}
+.section{padding:var(--sp-7) 0;}
+.section-tight{padding:var(--sp-6) 0;}
+.section-header{
+  display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-4);
+  margin-bottom:var(--sp-5); border-bottom:2px solid var(--ink-900); padding-bottom:.6rem;
+}
+.section-eyebrow{
+  font-family:var(--f-ui); font-size:.95rem; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--maroon-700); position:relative; padding-bottom:.6rem;
+  margin-bottom:-.62rem; border-bottom:3px solid var(--gold-600);
+}
+.view-all{font-family:var(--f-ui); font-size:.78rem; font-weight:600; color:var(--ink-500); white-space:nowrap;}
+.view-all:hover{color:var(--maroon-700);}
+
+/* ---------- Hero ---------- */
+.hero-grid{display:grid; grid-template-columns:2fr 1fr; gap:var(--sp-5);}
+.hero-carousel{position:relative; background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-md);}
+.hero-slide{display:none; grid-template-columns:1.05fr .95fr;}
+.hero-slide.active{display:grid;}
+.hero-art{background:linear-gradient(155deg, var(--maroon-700), var(--maroon-900)); padding:var(--sp-6); display:flex; align-items:center; justify-content:center; min-height:230px;}
+.hero-art svg{width:100%; height:auto; max-width:230px; color:var(--gold-300);}
+.hero-copy{padding:var(--sp-6); display:flex; flex-direction:column; gap:.85rem; justify-content:center;}
+.tag-pill{display:inline-flex; align-items:center; font-family:var(--f-ui); font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:.3rem .65rem; border-radius:99px; width:fit-content;}
+.tag-maroon{background:var(--maroon-700); color:#fff;}
+.tag-teal{background:var(--teal-700); color:#fff;}
+.tag-gold{background:var(--gold-600); color:#34230A;}
+.hero-copy h2{font-size:clamp(1.4rem,2.6vw,2rem); line-height:1.15; color:var(--ink-900);}
+.hero-copy h2 a:hover{color:var(--maroon-700);}
+.hero-copy .excerpt{color:var(--ink-500); font-size:1rem; line-height:1.55;}
+.meta-row{display:flex; align-items:center; gap:.6rem; font-family:var(--f-ui); font-size:.74rem; color:var(--ink-500); font-weight:500;}
+.meta-row .sep{opacity:.5;}
+.hero-controls{position:absolute; bottom:var(--sp-4); right:var(--sp-5); display:flex; align-items:center; gap:.6rem; z-index:3;}
+.hero-arrow{width:34px; height:34px; border-radius:50%; background:var(--paper-card); border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);}
+.hero-arrow svg{width:16px; height:16px;}
+.hero-arrow:hover{background:var(--maroon-700); color:#fff; border-color:var(--maroon-700);}
+.hero-dots{display:flex; gap:.4rem;}
+.hero-dot{width:8px; height:8px; border-radius:50%; background:var(--line-strong);}
+.hero-dot.active{background:var(--maroon-700); width:20px; border-radius:5px;}
+
+.hero-secondary{display:flex; flex-direction:column; gap:var(--sp-4);}
+.secondary-card{
+  background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-md);
+  padding:var(--sp-4); display:flex; gap:var(--sp-3); align-items:flex-start;
+  box-shadow:var(--shadow-sm);
+}
+.secondary-icon{
+  flex-shrink:0; width:46px; height:46px; border-radius:var(--radius-sm);
+  background:var(--paper-dim); display:flex; align-items:center; justify-content:center;
+  color:var(--maroon-700);
+}
+.secondary-icon svg{width:24px; height:24px;}
+.secondary-body h3{font-size:1.02rem; line-height:1.3; margin-bottom:.3rem;}
+.secondary-body h3 a:hover{color:var(--maroon-700);}
+.secondary-body .meta-row{margin-top:.35rem;}
+
+/* ---------- Stats strip ---------- */
+.stats-strip{background:var(--maroon-800); color:#fff;}
+body.dark .stats-strip{background:var(--maroon-900);}
+.stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-4); padding:var(--sp-6) 0;}
+.stat-item{text-align:center; border-left:1px solid rgba(255,255,255,.18); padding:0 var(--sp-3);}
+.stat-item:first-child{border-left:none;}
+.stat-num-wrap{font-family:var(--f-display); font-weight:800; font-size:clamp(1.6rem,3vw,2.4rem); color:var(--gold-300);}
+.stat-label{font-family:var(--f-ui); font-size:.76rem; color:#EBDFCF; opacity:.85; margin-top:.25rem; letter-spacing:.02em;}
+
+/* ---------- Content layout (news + sidebar) ---------- */
+.content-layout{display:grid; grid-template-columns:2fr 1fr; gap:var(--sp-6); align-items:start;}
+
+.filter-row{display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:var(--sp-5);}
+.filter-pill{
+  font-family:var(--f-ui); font-size:.76rem; font-weight:600; padding:.4rem .95rem;
+  border-radius:99px; border:1px solid var(--line-strong); color:var(--ink-700); background:var(--paper-card);
+}
+.filter-pill:hover{border-color:var(--maroon-700); color:var(--maroon-700);}
+.filter-pill.active{background:var(--maroon-700); border-color:var(--maroon-700); color:#fff;}
+
+.news-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--sp-4);}
+.news-card{
+  background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-md);
+  display:flex; flex-direction:column; overflow:hidden; transition:box-shadow .2s ease, transform .2s ease;
+}
+.news-card:hover{box-shadow:var(--shadow-md); transform:translateY(-2px);}
+.news-card-art{background:var(--paper-dim); padding:var(--sp-4); display:flex; align-items:center; justify-content:space-between;}
+.news-card-art svg{width:30px; height:30px; color:var(--maroon-700);}
+.news-card-body{padding:var(--sp-4); display:flex; flex-direction:column; gap:.55rem; flex:1;}
+.news-card-body h3{font-size:1.06rem; line-height:1.3;}
+.news-card-body h3 a:hover{color:var(--maroon-700);}
+.news-card-body .excerpt{color:var(--ink-500); font-size:.88rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+.news-empty{grid-column:1/-1; text-align:center; padding:var(--sp-7) var(--sp-4); color:var(--ink-500); font-family:var(--f-ui);}
+
+/* ---------- Sidebar ---------- */
+.sidebar{display:flex; flex-direction:column; gap:var(--sp-5);}
+.widget{background:var(--paper-card); border:1px solid var(--line); border-radius:var(--radius-md); padding:var(--sp-4); box-shadow:var(--shadow-sm);}
+.widget-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-3);}
+.widget-title{font-family:var(--f-ui); font-size:.82rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--maroon-700);}
+.tab-group{display:flex; gap:.3rem; background:var(--paper-dim); padding:.2rem; border-radius:99px;}
+.tab-btn{font-family:var(--f-ui); font-size:.68rem; font-weight:700; padding:.3rem .6rem; border-radius:99px; color:var(--ink-500);}
+.tab-btn.active{background:var(--maroon-700); color:#fff;}
+
+.ranked-list{display:flex; flex-direction:column;}
+.ranked-item{display:flex; gap:.85rem; padding:.7rem 0; border-bottom:1px solid var(--line); align-items:flex-start;}
+.ranked-item:last-child{border-bottom:none; padding-bottom:0;}
+.rank-num{font-family:var(--f-display); font-weight:800; font-size:1.5rem; color:var(--gold-600); line-height:1; min-width:1.8rem;}
+.ranked-item h4{font-size:.92rem; line-height:1.35; font-weight:600; font-family:var(--f-body);}
+.ranked-item h4 a:hover{color:var(--maroon-700);}
+.ranked-item .cat-label{font-family:var(--f-ui); font-size:.68rem; color:var(--ink-500); text-transform:uppercase; letter-spacing:.04em; margin-top:.2rem; display:block;}
+
+.notice-list{display:flex; flex-direction:column;}
+.notice-item{display:flex; gap:.7rem; padding:.65rem 0; border-bottom:1px solid var(--line); align-items:flex-start;}
+.notice-item:last-child{border-bottom:none; padding-bottom:0;}
+.notice-icon{flex-shrink:0; width:30px; height:30px; border-radius:50%; background:var(--teal-700); color:#fff; display:flex; align-items:center; justify-content:center;}
+.notice-icon svg{width:15px; height:15px;}
+.notice-body h4{font-size:.86rem; font-weight:600; line-height:1.35; font-family:var(--f-body);}
+.notice-body h4 a:hover{color:var(--maroon-700);}
+.notice-meta{display:flex; gap:.5rem; align-items:center; margin-top:.25rem;}
+.notice-date{font-family:var(--f-ui); font-size:.68rem; color:var(--ink-500);}
+.pdf-chip{font-family:var(--f-ui); font-size:.62rem; font-weight:700; background:var(--paper-dim); color:var(--maroon-700); padding:.1rem .4rem; border-radius:3px;}
+.widget-btn{
+  display:block; text-align:center; width:100%; margin-top:var(--sp-3); padding:.55rem;
+  font-family:var(--f-ui); font-size:.76rem; font-weight:700; border:1px solid var(--maroon-700);
+  color:var(--maroon-700); border-radius:var(--radius-sm);
+}
+.widget-btn:hover{background:var(--maroon-700); color:#fff;}
+
+.quicklinks-grid{display:grid; grid-template-columns:1fr 1fr; gap:.6rem;}
+.quicklink{
+  display:flex; flex-direction:column; align-items:flex-start; gap:.4rem; padding:.7rem;
+  background:var(--paper-dim); border-radius:var(--radius-sm); font-family:var(--f-ui);
+  font-size:.76rem; font-weight:600; color:var(--ink-700);
+}
+.quicklink svg{width:18px; height:18px; color:var(--maroon-700);}
+.quicklink:hover{background:var(--gold-300); color:var(--maroon-900);}
+
+.newsletter-widget{background:var(--maroon-700); color:#fff; border:none;}
+body.dark .newsletter-widget{background:var(--maroon-900);}
+.newsletter-widget .widget-title{color:var(--gold-300);}
+.newsletter-widget p{font-size:.82rem; color:#F1E2CF; margin-bottom:var(--sp-3); line-height:1.5;}
+.newsletter-form{display:flex; flex-direction:column; gap:.5rem;}
+.newsletter-form input{
+  padding:.6rem .75rem; border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.1); color:#fff; font-size:.85rem;
+}
+.newsletter-form input::placeholder{color:#E6D5C2;}
+.newsletter-form button{
+  background:var(--gold-600); color:#34230A; font-weight:700; font-family:var(--f-ui);
+  padding:.6rem; border-radius:var(--radius-sm); font-size:.82rem;
+}
+.newsletter-form button:hover{background:var(--gold-300);}
+.newsletter-msg{font-family:var(--f-ui); font-size:.78rem; margin-top:.5rem; display:none;}
+.newsletter-msg.show{display:block;}
+
+/* ---------- Sports & Culture ---------- */
+.sports-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-4);}
+.sport-card{position:relative; border-radius:var(--radius-md); overflow:hidden; min-height:230px; display:flex; flex-direction:column; justify-content:flex-end; box-shadow:var(--shadow-sm);}
+.sport-bg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;}
+.sport-bg svg{width:55%; opacity:.16; color:#fff;}
+.sport-bg.bg-a{background:linear-gradient(150deg,var(--teal-700),var(--maroon-900));}
+.sport-bg.bg-b{background:linear-gradient(150deg,var(--maroon-700),#2C0B12);}
+.sport-bg.bg-c{background:linear-gradient(150deg,var(--gold-700),var(--maroon-800));}
+.sport-content{position:relative; padding:var(--sp-4); color:#fff;}
+.sport-content h3{font-size:1.05rem; line-height:1.3; margin:.5rem 0 .4rem;}
+.sport-content .excerpt{font-size:.82rem; color:#EFE3D6; line-height:1.45;}
+
+/* ---------- Events timeline ---------- */
+.events-list{position:relative; padding-left:1.6rem; border-left:2px solid var(--line-strong);}
+.event-item{position:relative; padding-bottom:var(--sp-5); display:flex; gap:var(--sp-4);}
+.event-item:last-child{padding-bottom:0;}
+.event-item::before{content:""; position:absolute; left:-1.83rem; top:.3rem; width:11px; height:11px; border-radius:50%; background:var(--gold-600); border:2px solid var(--paper);}
+.event-date-badge{
+  flex-shrink:0; width:58px; text-align:center; background:var(--maroon-700); color:#fff;
+  border-radius:var(--radius-sm); padding:.4rem 0; font-family:var(--f-ui);
+}
+.event-date-badge .day{font-size:1.15rem; font-weight:800; line-height:1;}
+.event-date-badge .mon{font-size:.62rem; text-transform:uppercase; letter-spacing:.04em; opacity:.9;}
+.event-body h3{font-size:1rem; margin-bottom:.25rem;}
+.event-body .ev-meta{font-family:var(--f-ui); font-size:.76rem; color:var(--ink-500); margin-bottom:.3rem;}
+.event-body .excerpt{font-size:.86rem; color:var(--ink-500); line-height:1.5;}
+
+/* ---------- Gallery ---------- */
+.gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--sp-4);}
+.gallery-tile{
+  position:relative; border-radius:var(--radius-md); overflow:hidden; min-height:150px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem;
+  background:linear-gradient(160deg, var(--paper-dim), var(--line)); border:1px solid var(--line);
+  transition:transform .2s ease;
+}
+.gallery-tile:hover{transform:translateY(-3px); border-color:var(--gold-600);}
+.gallery-tile svg{width:34px; height:34px; color:var(--maroon-700);}
+.gallery-tile span{font-family:var(--f-ui); font-size:.8rem; font-weight:600; color:var(--ink-700);}
+
+/* ============================ FOOTER ============================ */
+footer{background:var(--maroon-900); color:#E6D9C8;}
+.footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:var(--sp-6); padding:var(--sp-7) 0 var(--sp-6);}
+.footer-col h4{font-family:var(--f-ui); font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-300); margin-bottom:var(--sp-3);}
+.footer-about p{font-size:.86rem; line-height:1.6; color:#D9C9B4; margin-bottom:var(--sp-3);}
+.footer-seal{display:flex; align-items:center; gap:.6rem; margin-bottom:var(--sp-3);}
+.footer-seal svg{width:38px; height:38px; color:var(--gold-300);}
+.footer-seal span{font-family:var(--f-display); font-weight:800; font-size:1.1rem; color:#fff;}
+.footer-col ul li{margin-bottom:.55rem;}
+.footer-col ul a{font-size:.85rem; color:#D9C9B4;}
+.footer-col ul a:hover{color:var(--gold-300);}
+.footer-contact li{display:flex; gap:.55rem; font-size:.85rem; color:#D9C9B4; margin-bottom:.7rem; align-items:flex-start;}
+.footer-contact svg{width:16px; height:16px; flex-shrink:0; margin-top:.15rem; color:var(--gold-300);}
+.footer-social{display:flex; gap:.6rem; margin-top:var(--sp-3);}
+.footer-social a{width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center;}
+.footer-social a:hover{background:var(--gold-600); color:var(--maroon-900);}
+.footer-social svg{width:15px; height:15px;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12); padding:var(--sp-4) 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem;}
+.footer-bottom p{font-size:.76rem; color:#C2B19C; font-family:var(--f-ui);}
+.footer-bottom-links{display:flex; gap:1rem;}
+.footer-bottom-links a{font-size:.76rem; color:#C2B19C; font-family:var(--f-ui);}
+.footer-bottom-links a:hover{color:var(--gold-300);}
+
+/* ============================ OVERLAYS ============================ */
+.overlay-backdrop{
+  position:fixed; inset:0; background:rgba(20,12,9,.72); z-index:200; display:none;
+  align-items:flex-start; justify-content:center; padding:var(--sp-7) var(--sp-4);
+  backdrop-filter:blur(2px);
+}
+.overlay-backdrop.show{display:flex;}
+.search-box{width:100%; max-width:640px; background:var(--paper); border-radius:var(--radius-md); box-shadow:0 20px 60px rgba(0,0,0,.4); overflow:hidden;}
+.search-input-row{display:flex; align-items:center; gap:.6rem; padding:var(--sp-4); border-bottom:1px solid var(--line);}
+.search-input-row svg{width:20px; height:20px; color:var(--ink-500); flex-shrink:0;}
+.search-input-row input{flex:1; border:none; background:none; font-size:1.05rem; font-family:var(--f-body); outline:none; color:var(--ink-900);}
+.search-close{flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--ink-500);}
+.search-close:hover{background:var(--paper-dim);}
+.search-results{max-height:55vh; overflow-y:auto; padding:.5rem;}
+.search-result-item{display:block; padding:.7rem .85rem; border-radius:var(--radius-sm);}
+.search-result-item:hover{background:var(--paper-dim);}
+.search-result-item .src-tag{font-family:var(--f-ui); font-size:.66rem; font-weight:700; color:var(--maroon-700); text-transform:uppercase; letter-spacing:.04em;}
+.search-result-item h4{font-size:.94rem; margin-top:.2rem; font-family:var(--f-body); font-weight:600;}
+.search-empty{padding:var(--sp-6) var(--sp-4); text-align:center; color:var(--ink-500); font-family:var(--f-ui); font-size:.86rem;}
+.search-hint{padding:var(--sp-5) var(--sp-4); text-align:center; color:var(--ink-500); font-family:var(--f-ui); font-size:.82rem;}
+
+.modal-box{width:100%; max-width:560px; background:var(--paper); border-radius:var(--radius-md); box-shadow:0 20px 60px rgba(0,0,0,.4); overflow:hidden;}
+.modal-head{display:flex; align-items:center; justify-content:space-between; padding:var(--sp-4) var(--sp-5); border-bottom:1px solid var(--line); background:var(--maroon-700); color:#fff;}
+.modal-head h3{font-size:1.15rem; color:#fff;}
+.modal-close{width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff;}
+.modal-close:hover{background:rgba(255,255,255,.15);}
+.modal-body{max-height:60vh; overflow-y:auto; padding:var(--sp-4) var(--sp-5);}
+
+.lightbox-box{max-width:340px; width:100%; background:var(--paper); border-radius:var(--radius-md); padding:var(--sp-6); text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.4); position:relative;}
+.lightbox-box svg{width:64px; height:64px; color:var(--maroon-700); margin:0 auto var(--sp-4);}
+.lightbox-box h3{margin-bottom:.5rem;}
+.lightbox-box p{color:var(--ink-500); font-size:.88rem; line-height:1.5;}
+.lightbox-close{position:absolute; top:.6rem; right:.6rem; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--ink-500);}
+.lightbox-close:hover{background:var(--paper-dim);}
+
+/* ---------- Back to top ---------- */
+#backToTop{
+  position:fixed; right:var(--sp-5); bottom:var(--sp-5); width:46px; height:46px; border-radius:50%;
+  background:var(--maroon-700); color:#fff; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-md); opacity:0; pointer-events:none; transform:translateY(10px);
+  transition:opacity .25s ease, transform .25s ease; z-index:50;
+}
+#backToTop.show{opacity:1; pointer-events:auto; transform:translateY(0);}
+#backToTop svg{width:20px; height:20px;}
+#backToTop:hover{background:var(--maroon-600);}
+
+/* ============================ RESPONSIVE ============================ */
+@media (max-width: 1024px){
+  .hero-grid{grid-template-columns:1fr;}
+  .content-layout{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .sports-grid{grid-template-columns:1fr 1fr;}
+  .gallery-grid{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width: 860px){
+  .util-tagline{display:none;}
+  .nav-list{
+    position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); background:var(--maroon-800);
+    flex-direction:column; flex-wrap:nowrap; padding:var(--sp-7) var(--sp-4) var(--sp-4);
+    transform:translateX(100%); transition:transform .3s ease; z-index:220; overflow-y:auto;
+  }
+  .nav-list.open{transform:translateX(0); box-shadow:-12px 0 30px rgba(0,0,0,.3);}
+  .nav-list a{padding:.95rem .25rem; border-bottom:1px solid rgba(255,255,255,.1); border-radius:0;}
+  .nav-list a:hover, .nav-list a.active{background:none; border-bottom:1px solid var(--gold-600);}
+  .hamburger{display:block;}
+  .nav-search-btn span{display:none;}
+  .nav-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:210;}
+  .nav-overlay.show{display:block;}
+  .nav-close-mobile{display:flex !important; justify-content:flex-end; padding-bottom:var(--sp-4);}
+  .nav-close-mobile button{width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center; color:#fff;}
+}
+@media (min-width: 861px){
+  .nav-close-mobile{display:none;}
+}
+@media (max-width: 720px){
+  .masthead-title{white-space:normal;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .stat-item:nth-child(3){border-left:none;}
+  .footer-grid{grid-template-columns:1fr;}
+  .sports-grid{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .hero-secondary{flex-direction:row; overflow-x:auto; gap:var(--sp-3); padding-bottom:.3rem;}
+  .secondary-card{min-width:240px;}
+  .quicklinks-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width: 480px){
+  .wrap{padding:0 var(--sp-4);}
+  .hero-slide{grid-template-columns:1fr;}
+  .hero-art{min-height:140px; padding:var(--sp-4);}
+  .hero-art svg{max-width:140px;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .util-right{gap:.4rem;}
+  .lang-toggle span:not(.bn){display:none;}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- ============================ HEADER ============================ -->
+<header>
+  <div class="util-bar">
+    <div class="wrap util-inner">
+      <div class="util-left">
+        <div class="util-date">
+          <span class="bn" id="utilDateBn">শুক্রবার, ১৯ জুন ২০২৬</span>
+          <span id="utilDateEn">Friday, 19 June 2026 · --:--:--</span>
+        </div>
+        <span class="util-tagline" data-en="Official student-run news &amp; notice portal of Rajshahi College" data-bn="রাজশাহী কলেজের শিক্ষার্থী-পরিচালিত নিউজ ও নোটিশ পোর্টাল">Official student-run news &amp; notice portal of Rajshahi College</span>
+      </div>
+      <div class="util-right">
+        <div class="social-mini">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5H16l.4-3H13.5V8.4c0-.87.24-1.46 1.5-1.46H16.5V4.34C16.2 4.3 15.2 4.2 14 4.2c-2.4 0-4 1.46-4 4.15V10.5H7.5v3H10V21h3.5z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 8.6s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C16 5.3 12 5.3 12 5.3h0s-4 0-7.1.3c-.4 0-1.3.1-2.1.9C2.2 7.1 2 8.6 2 8.6S1.8 10.3 1.8 12v1.9c0 1.7.2 3.4.2 3.4s.2 1.5.8 2.1c.8.8 1.9.8 2.3.9 1.7.2 7 .3 7 .3s4 0 7.1-.3c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.7.2-3.4V12c0-1.7-.2-3.4-.2-3.4zM9.9 15.3V8.9l5.8 3.2-5.8 3.2z"/></svg></a>
+        </div>
+        <div class="fontsize-group" role="group" aria-label="Adjust text size">
+          <button id="fontDec" aria-label="Decrease text size">A−</button>
+          <button id="fontInc" aria-label="Increase text size">A+</button>
+        </div>
+        <button class="util-btn" id="darkToggle" aria-label="Toggle dark mode">
+          <svg id="darkIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+        </button>
+        <button class="util-btn lang-toggle" id="langToggle"><span>EN</span> / <span class="bn">বাং</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <div class="wrap masthead-inner">
+      <svg class="seal" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="50" cy="50" r="47" stroke="#7A1F2E" stroke-width="2.5"/>
+        <circle cx="50" cy="50" r="40" stroke="#B8862E" stroke-width="1.2"/>
+        <path id="sealCirclePath" d="M 50 10 A 40 40 0 1 1 49.9 10" fill="none"/>
+        <text font-family="IBM Plex Sans" font-size="5.2" font-weight="700" letter-spacing="1.5" fill="#7A1F2E">
+          <textPath href="#sealCirclePath" startOffset="2%">RAJSHAHI COLLEGE • ESTD. 1873 • RAJSHAHI COLLEGE • ESTD. 1873 •</textPath>
+        </text>
+        <g stroke="#B8862E" stroke-width="1.6" fill="none" stroke-linecap="round">
+          <path d="M30 62 C28 50 32 38 40 32"/>
+          <path d="M34 36 L40 32 L38 39"/>
+          <path d="M33 44 L28 43"/><path d="M32 50 L27 50"/><path d="M33 56 L28 58"/>
+          <path d="M70 62 C72 50 68 38 60 32"/>
+          <path d="M66 36 L60 32 L62 39"/>
+          <path d="M67 44 L72 43"/><path d="M68 50 L73 50"/><path d="M67 56 L72 58"/>
+        </g>
+        <g fill="#7A1F2E">
+          <rect x="38" y="45" width="24" height="17" rx="1"/>
+          <path d="M38 45 L50 40 L62 45 Z"/>
+          <rect x="48.5" y="50" width="3" height="12" fill="#FAF8F3"/>
+        </g>
+        <path d="M50 25 L50 40" stroke="#B8862E" stroke-width="1.6"/>
+        <circle cx="50" cy="23" r="2.6" fill="#B8862E"/>
+      </svg>
+      <div class="masthead-text">
+        <span class="eyebrow" data-en="Since 1873 · Rajshahi, Bangladesh" data-bn="১৮৭৩ সাল থেকে · রাজশাহী, বাংলাদেশ">Since 1873 · Rajshahi, Bangladesh</span>
+        <h1 class="masthead-title">RAJSHAHI COLLEGE</h1>
+        <div class="masthead-bn">রাজশাহী কলেজ</div>
+        <div class="masthead-sub"><strong>News &amp; Notice Portal</strong> — campus news, results, notices &amp; events</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <div class="wrap nav-inner">
+      <div class="nav-overlay" id="navOverlay"></div>
+      <ul class="nav-list" id="navList">
+        <li class="nav-close-mobile"><button id="navCloseBtn" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></li>
+        <li><a href="#main" class="active" data-en="Home" data-bn="হোম">Home</a></li>
+        <li><a href="#news" data-en="Campus News" data-bn="ক্যাম্পাস নিউজ">Campus News</a></li>
+        <li><a href="#notices" data-en="Notices" data-bn="নোটিশ">Notices</a></li>
+        <li><a href="#admission" data-en="Admission" data-bn="ভর্তি">Admission</a></li>
+        <li><a href="#academics" data-en="Academics" data-bn="একাডেমিক">Academics</a></li>
+        <li><a href="#sports" data-en="Sports &amp; Culture" data-bn="খেলাধুলা ও সংস্কৃতি">Sports &amp; Culture</a></li>
+        <li><a href="#events" data-en="Events" data-bn="অনুষ্ঠান">Events</a></li>
+        <li><a href="#alumni" data-en="Alumni" data-bn="প্রাক্তন শিক্ষার্থী">Alumni</a></li>
+        <li><a href="#gallery" data-en="Gallery" data-bn="গ্যালারি">Gallery</a></li>
+        <li><a href="#footerContact" data-en="Contact" data-bn="যোগাযোগ">Contact</a></li>
+      </ul>
+      <button class="nav-search-btn" id="searchOpenBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span data-en="Search" data-bn="অনুসন্ধান">Search</span>
+      </button>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      <div class="ticker-badge"><span class="dot"></span><span data-en="Breaking" data-bn="ব্রেকিং">Breaking</span></div>
+      <div class="ticker-viewport">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ MAIN ============================ -->
+<main id="main">
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-carousel" id="heroCarousel"></div>
+        <div class="hero-secondary" id="heroSecondary"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-strip">
+    <div class="wrap stats-grid">
+      <div class="stat-item">
+        <div class="stat-num-wrap"><span class="stat-num" data-target="1873">0</span></div>
+        <div class="stat-label" data-en="Founded" data-bn="প্রতিষ্ঠার সাল">Founded</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num-wrap"><span class="stat-num" data-target="153">0</span>+</div>
+        <div class="stat-label" data-en="Years of Legacy" data-bn="ঐতিহ্যের বছর">Years of Legacy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num-wrap"><span class="stat-num" data-target="26000">0</span>+</div>
+        <div class="stat-label" data-en="Students" data-bn="শিক্ষার্থী">Students</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num-wrap"><span class="stat-num" data-target="3">0</span><sup style="font-size:1rem;">rd</sup></div>
+        <div class="stat-label" data-en="Oldest College in Bangladesh" data-bn="বাংলাদেশের প্রাচীনতম কলেজ">Oldest College in Bangladesh</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="news">
+    <div class="wrap content-layout">
+      <div class="news-main">
+        <div class="section-header">
+          <span class="section-eyebrow" data-en="Campus News" data-bn="ক্যাম্পাস নিউজ">Campus News</span>
+        </div>
+        <div class="filter-row" id="filterRow"></div>
+        <div class="news-grid" id="newsGrid"></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="widget" id="notices">
+          <div class="widget-head">
+            <span class="widget-title" data-en="Notice Board" data-bn="নোটিশ বোর্ড">Notice Board</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A1F2E" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          </div>
+          <div class="notice-list" id="noticeList"></div>
+          <button class="widget-btn" id="viewAllNoticesBtn" data-en="View all notices" data-bn="সব নোটিশ দেখুন">View all notices</button>
+        </div>
+
+        <div class="widget">
+          <div class="widget-head">
+            <span class="widget-title" data-en="Most Read" data-bn="সর্বাধিক পঠিত">Most Read</span>
+            <div class="tab-group" id="mostReadTabs">
+              <button class="tab-btn active" data-tab="today" data-en="Today" data-bn="আজ">Today</button>
+              <button class="tab-btn" data-tab="week" data-en="Week" data-bn="সপ্তাহ">Week</button>
+              <button class="tab-btn" data-tab="month" data-en="Month" data-bn="মাস">Month</button>
+            </div>
+          </div>
+          <ol class="ranked-list" id="mostReadList"></ol>
+        </div>
+
+        <div class="widget">
+          <div class="widget-head">
+            <span class="widget-title" data-en="Quick Links" data-bn="দ্রুত লিংক">Quick Links</span>
+          </div>
+          <div class="quicklinks-grid">
+            <a class="quicklink" href="#" data-en="Class Routine" data-bn="ক্লাস রুটিন"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Class Routine</a>
+            <a class="quicklink" href="#" data-en="Exam Results" data-bn="পরীক্ষার ফলাফল"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Exam Results</a>
+            <a class="quicklink" href="#admission" data-en="Online Admission" data-bn="অনলাইন ভর্তি"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Online Admission</a>
+            <a class="quicklink" href="#" data-en="Library Catalogue" data-bn="লাইব্রেরি ক্যাটালগ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Library Catalogue</a>
+            <a class="quicklink" href="#" data-en="Hostel Info" data-bn="হোস্টেল তথ্য"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Hostel Info</a>
+            <a class="quicklink" href="#events" data-en="Academic Calendar" data-bn="একাডেমিক ক্যালেন্ডার"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></svg>Academic Calendar</a>
+          </div>
+        </div>
+
+        <div class="widget newsletter-widget">
+          <div class="widget-head">
+            <span class="widget-title" data-en="Stay Updated" data-bn="আপডেট থাকুন">Stay Updated</span>
+          </div>
+          <p data-en="Get campus news, notices and results in your inbox." data-bn="ক্যাম্পাস নিউজ, নোটিশ ও ফলাফল পান আপনার ইনবক্সে।">Get campus news, notices and results in your inbox.</p>
+          <form class="newsletter-form" id="newsletterForm">
+            <input type="email" id="newsletterEmail" placeholder="you@example.com" required>
+            <button type="submit" data-en="Subscribe" data-bn="সাবস্ক্রাইব">Subscribe</button>
+          </form>
+          <p class="newsletter-msg" id="newsletterMsg"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight" id="sports" style="background:var(--paper-dim);">
+    <div class="wrap">
+      <div class="section-header">
+        <span class="section-eyebrow" data-en="Sports &amp; Culture" data-bn="খেলাধুলা ও সংস্কৃতি">Sports &amp; Culture</span>
+        <a class="view-all" href="#news" data-en="View all →" data-bn="সব দেখুন →">View all →</a>
+      </div>
+      <div class="sports-grid">
+        <article class="sport-card">
+          <div class="sport-bg bg-a"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5.5L18.5 3 13 8.5l-1-1-1.5 1.5 1 1L3 18.5 5.5 21l8.5-8.5 1 1 1.5-1.5-1-1L21 5.5z"/></svg></div>
+          <div class="sport-content">
+            <span class="tag-pill tag-gold">Cricket</span>
+            <h3>Rajshahi College Edge City College in a Last-Over Thriller</h3>
+            <p class="excerpt">A composed final over sealed a tense run-chase as the home side claimed the inter-college trophy.</p>
+          </div>
+        </article>
+        <article class="sport-card">
+          <div class="sport-bg bg-b"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1"/></svg></div>
+          <div class="sport-content">
+            <span class="tag-pill tag-teal">Football</span>
+            <h3>Football Team March Into Divisional Finals on Penalties</h3>
+            <p class="excerpt">A nerve-wracking shootout sends the college's footballers through to next month's final.</p>
+          </div>
+        </article>
+        <article class="sport-card">
+          <div class="sport-bg bg-c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg></div>
+          <div class="sport-content">
+            <span class="tag-pill tag-gold">Culture</span>
+            <h3>Cultural Festival 'বর্ণিল' Closes With a Folk Music Night</h3>
+            <p class="excerpt">Three days of art, debate and music wrapped up with a packed open-air concert on campus.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="events">
+    <div class="wrap content-layout">
+      <div>
+        <div class="section-header">
+          <span class="section-eyebrow" data-en="Upcoming Events" data-bn="আসন্ন অনুষ্ঠান">Upcoming Events</span>
+        </div>
+        <div class="events-list" id="eventsList"></div>
+      </div>
+      <aside>
+        <div class="widget">
+          <div class="widget-head"><span class="widget-title" data-en="Academic Calendar" data-bn="একাডেমিক ক্যালেন্ডার">Academic Calendar</span></div>
+          <p style="font-size:.86rem; color:var(--ink-500); line-height:1.6;">Routines, examination schedules and holiday notices are updated here as soon as they're published by the college administration.</p>
+          <a class="widget-btn" href="#notices" style="display:block; margin-top:var(--sp-3);">See latest notices</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-tight" id="gallery" style="background:var(--paper-dim);">
+    <div class="wrap">
+      <div class="section-header">
+        <span class="section-eyebrow" data-en="Campus Gallery" data-bn="ক্যাম্পাস গ্যালারি">Campus Gallery</span>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer id="footerContact">
+  <div class="wrap footer-grid">
+    <div class="footer-col footer-about">
+      <div class="footer-seal">
+        <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="#E3C275" stroke-width="3"/><rect x="38" y="45" width="24" height="17" fill="#E3C275"/><path d="M38 45 L50 38 L62 45 Z" fill="#E3C275"/></svg>
+        <span>Rajshahi College</span>
+      </div>
+      <p>Founded in 1873, Rajshahi College is the third oldest institution of higher education in Bangladesh, after Dhaka College and Chittagong College. Centrally located in Rajshahi city beside Rajshahi Collegiate School and close to the Varendra Research Museum, it has been affiliated with the National University of Bangladesh and continues to serve tens of thousands of students each year.</p>
+      <p style="font-size:.78rem; opacity:.75;">This portal is an independent, student-run demonstration site and is not the college's official website.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Quick Links" data-bn="দ্রুত লিংক">Quick Links</h4>
+      <ul>
+        <li><a href="#news">Campus News</a></li>
+        <li><a href="#notices">Notice Board</a></li>
+        <li><a href="#admission">Admission</a></li>
+        <li><a href="#events">Events Calendar</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Departments" data-bn="বিভাগসমূহ">Departments</h4>
+      <ul>
+        <li><a href="#">Bangla</a></li>
+        <li><a href="#">English</a></li>
+        <li><a href="#">History</a></li>
+        <li><a href="#">Economics</a></li>
+        <li><a href="#">Political Science</a></li>
+        <li><a href="#">Physics</a></li>
+        <li><a href="#">Chemistry</a></li>
+        <li><a href="#">Botany &amp; Zoology</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Contact" data-bn="যোগাযোগ">Contact</h4>
+      <ul class="footer-contact">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Rajshahi College, Rajshahi-6100, Bangladesh</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.4 2.1L8 10.3a16 16 0 0 0 6 6l1.5-1.4a2 2 0 0 1 2.1-.4c1 .4 2 .6 3 .7a2 2 0 0 1 1.7 2z"/></svg>+880 721 772 XXX</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>news@rajshahicollege-portal.example</li>
+      </ul>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5H16l.4-3H13.5V8.4c0-.87.24-1.46 1.5-1.46H16.5V4.34C16.2 4.3 15.2 4.2 14 4.2c-2.4 0-4 1.46-4 4.15V10.5H7.5v3H10V21h3.5z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 8.6s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C16 5.3 12 5.3 12 5.3h0s-4 0-7.1.3c-.4 0-1.3.1-2.1.9C2.2 7.1 2 8.6 2 8.6S1.8 10.3 1.8 12v1.9c0 1.7.2 3.4.2 3.4s.2 1.5.8 2.1c.8.8 1.9.8 2.3.9 1.7.2 7 .3 7 .3s4 0 7.1-.3c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.7.2-3.4V12c0-1.7-.2-3.4-.2-3.4zM9.9 15.3V8.9l5.8 3.2-5.8 3.2z"/></svg></a>
+        <a href="#" aria-label="Mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg></a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© <span id="footerYear"></span> Rajshahi College News &amp; Notice Portal. Built by the College IT Cell (demo).</p>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#main">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ OVERLAYS ============================ -->
+<div class="overlay-backdrop" id="searchOverlay">
+  <div class="search-box">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search news, notices, events…" autocomplete="off">
+      <button class="search-close" id="searchCloseBtn" aria-label="Close search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <p class="search-hint">Start typing to search across news, notices and events.</p>
+    </div>
+  </div>
+</div>
+
+<div class="overlay-backdrop" id="noticeModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 data-en="All Notices" data-bn="সব নোটিশ">All Notices</h3>
+      <button class="modal-close" id="noticeModalClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body notice-list" id="noticeModalList"></div>
+  </div>
+</div>
+
+<div class="overlay-backdrop" id="lightbox">
+  <div class="lightbox-box">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div id="lightboxIcon"></div>
+    <h3 id="lightboxTitle"></h3>
+    <p id="lightboxDesc"></p>
+  </div>
+</div>
+
+<button id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const ICONS = {
+  building: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-7h6v7"/><path d="M4 21h16"/></svg>`,
+  cap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a3 3 0 0 0 3 5M17 5h3a3 3 0 0 1-3 5"/></svg>`,
+  calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>`,
+  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  bell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>`
+};
+
+const CATS = {
+  campus:   {en:'Campus News', bn:'ক্যাম্পাস', tag:'tag-maroon', icon:'building'},
+  academics:{en:'Academics',   bn:'একাডেমিক',  tag:'tag-teal',   icon:'cap'},
+  sports:   {en:'Sports',      bn:'খেলাধুলা',  tag:'tag-gold',   icon:'trophy'},
+  events:   {en:'Events',      bn:'অনুষ্ঠান',   tag:'tag-teal',   icon:'calendar'},
+  admission:{en:'Admission',   bn:'ভর্তি',     tag:'tag-maroon', icon:'book'},
+  alumni:   {en:'Alumni',      bn:'প্রাক্তন',   tag:'tag-gold',   icon:'users'}
+};
+
+const heroSlides = [
+  {category:'campus', title:`Rajshahi College Opens Week-Long Programme Marking 153 Years of Academic Legacy`,
+   excerpt:`A series of seminars, sports fixtures and a closing cultural evening will mark the anniversary of one of Bangladesh's oldest institutions of higher education.`,
+   date:`19 June 2026`, read:`5 min read`},
+  {category:'campus', title:`New Digital Library Wing Opens Inside the Historic Mohsin Bhaban`,
+   excerpt:`The renovated wing adds reading space and digital catalogue terminals alongside the college's original 19th-century administrative building.`,
+   date:`16 June 2026`, read:`4 min read`},
+  {category:'academics', title:`Honours 3rd Year Result 2025 Published; Pass Rate Climbs to 81%`,
+   excerpt:`Results are now available on the National University website, with the Departments of Physics and Bangla recording the strongest improvement this session.`,
+   date:`13 June 2026`, read:`3 min read`}
+];
+
+const newsArticles = [
+  {id:1, category:'campus', title:`153rd Founders' Day: A Week of Seminars, Sport and Culture Begins Monday`,
+   excerpt:`The programme opens with an academic seminar on the college's history, followed by inter-department matches through the week.`, date:`19 Jun 2026`, read:`4 min read`},
+  {id:2, category:'academics', title:`Department of Physics Hosts Regional Science Olympiad for College Students`,
+   excerpt:`Students from across the division competed in physics and astronomy rounds held in the new science auditorium.`, date:`17 Jun 2026`, read:`3 min read`},
+  {id:3, category:'academics', title:`Honours 3rd Year Result 2025 Published; Pass Rate Rises to 81%`,
+   excerpt:`The result, published on the National University portal, shows steady improvement over the previous session.`, date:`13 Jun 2026`, read:`3 min read`},
+  {id:4, category:'sports', title:`Cricket: Rajshahi College Beat City College in a Last-Over Thriller`,
+   excerpt:`A composed final over sealed victory in front of a packed home crowd at the college ground.`, date:`15 Jun 2026`, read:`3 min read`},
+  {id:5, category:'sports', title:`Football Team March Into Divisional Finals After Penalty Shootout Win`,
+   excerpt:`Nerves held as the college's footballers converted four of five spot-kicks to advance to next month's final.`, date:`11 Jun 2026`, read:`3 min read`},
+  {id:6, category:'events', title:`Annual Cultural Festival 'বর্ণিল' Closes With a Folk Music Night`,
+   excerpt:`Three days of art, debate and music on campus ended with an open-air concert by the college's music society.`, date:`9 Jun 2026`, read:`2 min read`},
+  {id:7, category:'events', title:`Career Counselling and Job Fair Scheduled for Next Month`,
+   excerpt:`Local employers and alumni mentors will hold sessions for final-year students in the central auditorium.`, date:`8 Jun 2026`, read:`2 min read`},
+  {id:8, category:'admission', title:`HSC 2026–27 Session: Online Admission Window Opens 1 July`,
+   excerpt:`Prospective students can apply through the National University admission portal once the window opens.`, date:`15 Jun 2026`, read:`3 min read`},
+  {id:9, category:'admission', title:`Honours Admission Test Results to Be Released Within Two Weeks`,
+   excerpt:`The admission committee says merit lists will be published department-wise on the notice board and website.`, date:`14 Jun 2026`, read:`2 min read`},
+  {id:10, category:'alumni', title:`Alumni Association Announces New Scholarship Fund for Meritorious Students`,
+   excerpt:`The fund will support tuition and book costs for students from low-income families starting next session.`, date:`10 Jun 2026`, read:`3 min read`},
+  {id:11, category:'alumni', title:`Distinguished Alumnus Honoured at National Science Award Ceremony`,
+   excerpt:`A former student of the Department of Chemistry was recognised for contributions to renewable energy research.`, date:`6 Jun 2026`, read:`3 min read`},
+  {id:12, category:'campus', title:`New Digital Library Wing Inaugurated Inside Historic Mohsin Bhaban`,
+   excerpt:`The wing adds reading space and digital catalogue terminals alongside the college's 19th-century administrative building.`, date:`16 Jun 2026`, read:`4 min read`}
+];
+
+const notices = [
+  {id:1, title:`HSC 2026–27 Online Admission Circular`, date:`15 June 2026`},
+  {id:2, title:`Honours 3rd Year Examination Routine (Revised)`, date:`12 June 2026`},
+  {id:3, title:`Bangabandhu Merit Scholarship: Deadline Extended to 30 June`, date:`10 June 2026`},
+  {id:4, title:`Notice: College Closed for Eid-ul-Adha Holidays`, date:`8 June 2026`},
+  {id:5, title:`Tender Notice: Laboratory Equipment, Department of Chemistry`, date:`5 June 2026`},
+  {id:6, title:`Notice: Library Card Renewal for 2026–27 Session`, date:`3 June 2026`},
+  {id:7, title:`Routine: Inter-Department Quiz Competition Heats`, date:`1 June 2026`}
+];
+
+const tickerItems = [
+  `Honours 3rd Year Result 2025 published on the National University website`,
+  `Eid-ul-Adha vacation: college will remain closed from 26 June to 2 July`,
+  `Online admission for HSC 2026–27 session begins 1 July`,
+  `Football team reaches divisional finals after penalty shootout`,
+  `Founders' Day cultural evening set for 21 June at the central auditorium`,
+  `Tender notice published for laboratory equipment, Department of Chemistry`
+];
+
+const mostReadData = {
+  today: [3,4,8,1,10],
+  week:  [12,5,6,3,9],
+  month: [10,11,1,8,2]
+};
+
+const eventsData = [
+  {day:'21', mon:'Jun', title:`Founders' Day Cultural Evening`, meta:`Central Auditorium · 6:00 PM`, excerpt:`Music, recitation and an awards segment honouring long-serving faculty.`},
+  {day:'25', mon:'Jun', title:`Inter-Department Quiz Competition`, meta:`Seminar Hall · 3:00 PM`, excerpt:`Eight departments compete in the final round of this year's quiz tournament.`},
+  {day:'01', mon:'Jul', title:`HSC 2026–27 Online Admission Opens`, meta:`National University Portal`, excerpt:`Application window opens for incoming higher-secondary students.`},
+  {day:'06', mon:'Jul', title:`Annual Sports Day`, meta:`College Playground · 9:00 AM`, excerpt:`Track and field events for all departments, open to staff and students.`},
+  {day:'12', mon:'Jul', title:`Alumni Homecoming Meet`, meta:`Central Lawn · 5:00 PM`, excerpt:`Former students return to campus for an evening of reunions and reflections.`}
+];
+
+const galleryItems = [
+  {key:'mohsin', label:'Mohsin Bhaban', icon:'building', desc:`The college's original administrative building, completed in 1888 and still in daily use.`},
+  {key:'library', label:'Central Library', icon:'book', desc:`Houses the college's reading rooms and the newly opened digital catalogue wing.`},
+  {key:'science', label:'Science Block', icon:'cap', desc:`Laboratories for the departments of Physics, Chemistry, Botany and Zoology.`},
+  {key:'ground', label:'Playground', icon:'trophy', desc:`Home ground for inter-department cricket and football fixtures.`},
+  {key:'auditorium', label:'Central Auditorium', icon:'calendar', desc:`Venue for Founders' Day, cultural festivals and academic seminars.`},
+  {key:'alumni', label:'Alumni Hall', icon:'users', desc:`Gathering space for alumni meets and mentorship sessions with students.`}
+];
+
+const bnDigitMap = {'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+function toBnDigits(n){ return String(n).split('').map(ch => bnDigitMap[ch] !== undefined ? bnDigitMap[ch] : ch).join(''); }
+const bnWeekdays = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+const bnMonths = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const enWeekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const enMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* ============================================================
+   RENDER HELPERS
+   ============================================================ */
+function tagClassFor(cat){ return CATS[cat] ? CATS[cat].tag : 'tag-maroon'; }
+function catLabel(cat){ return CATS[cat] ? CATS[cat].en : cat; }
+function findArticle(id){ return newsArticles.find(a => a.id === id); }
+
+function renderTicker(){
+  const track = document.getElementById('tickerTrack');
+  const items = tickerItems.concat(tickerItems); // duplicate for seamless loop
+  track.innerHTML = items.map(t => `<a href="#news">${t}</a>`).join('');
+}
+
+function renderHero(){
+  const carousel = document.getElementById('heroCarousel');
+  const slidesHtml = heroSlides.map((s,i) => `
+    <div class="hero-slide${i===0 ? ' active' : ''}" data-index="${i}">
+      <div class="hero-art">${ICONS[CATS[s.category].icon]}</div>
+      <div class="hero-copy">
+        <span class="tag-pill ${tagClassFor(s.category)}">${catLabel(s.category)}</span>
+        <h2><a href="#news">${s.title}</a></h2>
+        <p class="excerpt">${s.excerpt}</p>
+        <div class="meta-row"><span>${s.date}</span><span class="sep">·</span><span>${s.read}</span></div>
+      </div>
+    </div>`).join('');
+  const dotsHtml = heroSlides.map((_,i) => `<span class="hero-dot${i===0 ? ' active' : ''}" data-dot="${i}"></span>`).join('');
+  carousel.innerHTML = slidesHtml + `
+    <div class="hero-controls">
+      <button class="hero-arrow" id="heroPrev" aria-label="Previous story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="hero-dots" id="heroDots">${dotsHtml}</div>
+      <button class="hero-arrow" id="heroNext" aria-label="Next story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>`;
+
+  const secondary = document.getElementById('heroSecondary');
+  secondary.innerHTML = newsArticles.slice(0,3).map(a => `
+    <article class="secondary-card">
+      <div class="secondary-icon">${ICONS[CATS[a.category].icon]}</div>
+      <div class="secondary-body">
+        <span class="tag-pill ${tagClassFor(a.category)}" style="margin-bottom:.4rem;">${catLabel(a.category)}</span>
+        <h3><a href="#news" data-article="${a.id}">${a.title}</a></h3>
+        <div class="meta-row"><span>${a.date}</span><span class="sep">·</span><span>${a.read}</span></div>
+      </div>
+    </article>`).join('');
+
+  let current = 0;
+  const slideEls = () => carousel.querySelectorAll('.hero-slide');
+  const dotEls = () => carousel.querySelectorAll('.hero-dot');
+  function goTo(i){
+    const slides = slideEls(), dots = dotEls();
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (i + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+  document.getElementById('heroPrev').addEventListener('click', () => { goTo(current-1); resetAutoplay(); });
+  document.getElementById('heroNext').addEventListener('click', () => { goTo(current+1); resetAutoplay(); });
+  document.getElementById('heroDots').addEventListener('click', (e) => {
+    const dot = e.target.closest('.hero-dot');
+    if(!dot) return;
+    goTo(parseInt(dot.dataset.dot,10));
+    resetAutoplay();
+  });
+  let autoplay = setInterval(() => goTo(current+1), 5500);
+  function resetAutoplay(){ clearInterval(autoplay); autoplay = setInterval(() => goTo(current+1), 5500); }
+  carousel.addEventListener('mouseenter', () => clearInterval(autoplay));
+  carousel.addEventListener('mouseleave', resetAutoplay);
+}
+
+let activeFilter = 'all';
+function renderFilters(){
+  const row = document.getElementById('filterRow');
+  const all = [{key:'all', en:'All', bn:'সব'}].concat(Object.keys(CATS).map(k => ({key:k, en:CATS[k].en, bn:CATS[k].bn})));
+  row.innerHTML = all.map(c => `<button class="filter-pill${c.key==='all' ? ' active':''}" data-filter="${c.key}" data-en="${c.en}" data-bn="${c.bn}">${currentLang==='bn' ? c.bn : c.en}</button>`).join('');
+  row.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-pill');
+    if(!btn) return;
+    activeFilter = btn.dataset.filter;
+    row.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderNewsGrid();
+  });
+}
+
+function renderNewsGrid(){
+  const grid = document.getElementById('newsGrid');
+  const list = activeFilter === 'all' ? newsArticles : newsArticles.filter(a => a.category === activeFilter);
+  if(list.length === 0){
+    grid.innerHTML = `<p class="news-empty">No stories in this category yet.</p>`;
+    return;
+  }
+  grid.innerHTML = list.map(a => `
+    <article class="news-card">
+      <div class="news-card-art">
+        <span class="tag-pill ${tagClassFor(a.category)}">${catLabel(a.category)}</span>
+        ${ICONS[CATS[a.category].icon]}
+      </div>
+      <div class="news-card-body">
+        <h3><a href="#" data-article="${a.id}">${a.title}</a></h3>
+        <p class="excerpt">${a.excerpt}</p>
+        <div class="meta-row"><span>${a.date}</span><span class="sep">·</span><span>${a.read}</span></div>
+      </div>
+    </article>`).join('');
+}
+
+function renderNotices(){
+  const list = document.getElementById('noticeList');
+  list.innerHTML = notices.slice(0,5).map(n => `
+    <div class="notice-item">
+      <div class="notice-icon">${ICONS.bell}</div>
+      <div class="notice-body">
+        <h4><a href="#">${n.title}</a></h4>
+        <div class="notice-meta"><span class="notice-date">${n.date}</span><span class="pdf-chip">PDF</span></div>
+      </div>
+    </div>`).join('');
+
+  const modalList = document.getElementById('noticeModalList');
+  modalList.innerHTML = notices.map(n => `
+    <div class="notice-item">
+      <div class="notice-icon">${ICONS.bell}</div>
+      <div class="notice-body">
+        <h4><a href="#">${n.title}</a></h4>
+        <div class="notice-meta"><span class="notice-date">${n.date}</span><span class="pdf-chip">PDF</span></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderMostRead(tab){
+  const list = document.getElementById('mostReadList');
+  const ids = mostReadData[tab] || mostReadData.today;
+  list.innerHTML = ids.map((id,i) => {
+    const a = findArticle(id);
+    if(!a) return '';
+    return `<li class="ranked-item">
+      <span class="rank-num">${String(i+1).padStart(2,'0')}</span>
+      <div>
+        <h4><a href="#" data-article="${a.id}">${a.title}</a></h4>
+        <span class="cat-label">${catLabel(a.category)}</span>
+      </div>
+    </li>`;
+  }).join('');
+}
+
+function renderEvents(){
+  const list = document.getElementById('eventsList');
+  list.innerHTML = eventsData.map(ev => `
+    <div class="event-item">
+      <div class="event-date-badge"><div class="day">${ev.day}</div><div class="mon">${ev.mon}</div></div>
+      <div class="event-body">
+        <h3>${ev.title}</h3>
+        <div class="ev-meta">${ev.meta}</div>
+        <p class="excerpt">${ev.excerpt}</p>
+      </div>
+    </div>`).join('');
+}
+
+function renderGallery(){
+  const grid = document.getElementById('galleryGrid');
+  grid.innerHTML = galleryItems.map(g => `
+    <button class="gallery-tile" data-key="${g.key}">
+      ${ICONS[g.icon]}
+      <span>${g.label}</span>
+    </button>`).join('');
+  grid.addEventListener('click', (e) => {
+    const tile = e.target.closest('.gallery-tile');
+    if(!tile) return;
+    const item = galleryItems.find(g => g.key === tile.dataset.key);
+    openLightbox(item);
+  });
+}
+
+/* ============================================================
+   DATE / CLOCK
+   ============================================================ */
+function updateDateTime(){
+  const now = new Date();
+  document.getElementById('utilDateBn').textContent =
+    `${bnWeekdays[now.getDay()]}, ${toBnDigits(now.getDate())} ${bnMonths[now.getMonth()]} ${toBnDigits(now.getFullYear())}`;
+  const enDate = `${enWeekdays[now.getDay()]}, ${now.getDate()} ${enMonths[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('utilDateEn').innerHTML = `${enDate} · <span id="liveClock">${now.toLocaleTimeString()}</span>`;
+}
+setInterval(updateDateTime, 1000);
+
+/* ============================================================
+   STATS COUNT-UP
+   ============================================================ */
+function animateStats(){
+  const nums = document.querySelectorAll('.stat-num');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now){
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target).toLocaleString();
+          if(progress < 1){ requestAnimationFrame(tick); } else { el.textContent = target.toLocaleString(); }
+        }
+        requestAnimationFrame(tick);
+        observer.unobserve(el);
+      }
+    });
+  }, {threshold:0.5});
+  nums.forEach(n => observer.observe(n));
+}
+
+/* ============================================================
+   NAV / MOBILE MENU
+   ============================================================ */
+function setupNav(){
+  const hamburger = document.getElementById('hamburgerBtn');
+  const navList = document.getElementById('navList');
+  const overlay = document.getElementById('navOverlay');
+  const closeBtn = document.getElementById('navCloseBtn');
+  function openMenu(){
+    navList.classList.add('open');
+    overlay.classList.add('show');
+    hamburger.setAttribute('aria-expanded','true');
+  }
+  function closeMenu(){
+    navList.classList.remove('open');
+    overlay.classList.remove('show');
+    hamburger.setAttribute('aria-expanded','false');
+  }
+  hamburger.addEventListener('click', openMenu);
+  overlay.addEventListener('click', closeMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  navList.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  navList.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', () => {
+      navList.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+function buildSearchIndex(){
+  const idx = [];
+  newsArticles.forEach(a => idx.push({source:catLabel(a.category), title:a.title}));
+  notices.forEach(n => idx.push({source:'Notice', title:n.title}));
+  eventsData.forEach(e => idx.push({source:'Event', title:e.title}));
+  return idx;
+}
+function setupSearch(){
+  const openBtn = document.getElementById('searchOpenBtn');
+  const overlay = document.getElementById('searchOverlay');
+  const input = document.getElementById('searchInput');
+  const results = document.getElementById('searchResults');
+  const closeBtn = document.getElementById('searchCloseBtn');
+  const index = buildSearchIndex();
+
+  function open(){
+    overlay.classList.add('show');
+    setTimeout(() => input.focus(), 50);
+  }
+  function close(){
+    overlay.classList.remove('show');
+    input.value = '';
+    results.innerHTML = `<p class="search-hint">Start typing to search across news, notices and events.</p>`;
+  }
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) close(); });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && overlay.classList.contains('show')) close();
+    if(e.key === '/' && document.activeElement.tagName !== 'INPUT' && !overlay.classList.contains('show')){
+      e.preventDefault(); open();
+    }
+  });
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    if(q.length === 0){
+      results.innerHTML = `<p class="search-hint">Start typing to search across news, notices and events.</p>`;
+      return;
+    }
+    const matches = index.filter(item => item.title.toLowerCase().includes(q));
+    if(matches.length === 0){
+      results.innerHTML = `<p class="search-empty">No results for "${input.value}".</p>`;
+      return;
+    }
+    results.innerHTML = matches.slice(0,12).map(m => `
+      <a class="search-result-item" href="#news">
+        <span class="src-tag">${m.source}</span>
+        <h4>${m.title}</h4>
+      </a>`).join('');
+  });
+}
+
+/* ============================================================
+   NOTICE MODAL / LIGHTBOX
+   ============================================================ */
+function setupModals(){
+  const noticeModal = document.getElementById('noticeModal');
+  document.getElementById('viewAllNoticesBtn').addEventListener('click', () => noticeModal.classList.add('show'));
+  document.getElementById('noticeModalClose').addEventListener('click', () => noticeModal.classList.remove('show'));
+  noticeModal.addEventListener('click', (e) => { if(e.target === noticeModal) noticeModal.classList.remove('show'); });
+
+  const lightbox = document.getElementById('lightbox');
+  document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('show'));
+  lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.classList.remove('show'); });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      noticeModal.classList.remove('show');
+      lightbox.classList.remove('show');
+    }
+  });
+}
+function openLightbox(item){
+  document.getElementById('lightboxIcon').innerHTML = ICONS[item.icon];
+  document.getElementById('lightboxTitle').textContent = item.label;
+  document.getElementById('lightboxDesc').textContent = item.desc;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+/* ============================================================
+   MOST READ TABS
+   ============================================================ */
+function setupMostReadTabs(){
+  const tabs = document.getElementById('mostReadTabs');
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMostRead(btn.dataset.tab);
+  });
+}
+
+/* ============================================================
+   NEWSLETTER
+   ============================================================ */
+function setupNewsletter(){
+  const form = document.getElementById('newsletterForm');
+  const msg = document.getElementById('newsletterMsg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('newsletterEmail').value.trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if(!valid){
+      msg.textContent = currentLang === 'bn' ? 'একটি সঠিক ইমেইল ঠিকানা দিন।' : 'Please enter a valid email address.';
+      msg.style.color = '#FFB4A8';
+      msg.classList.add('show');
+      return;
+    }
+    msg.textContent = currentLang === 'bn' ? 'ধন্যবাদ! আপনি সাবস্ক্রাইব করেছেন।' : `Thanks! ${email} is now subscribed.`;
+    msg.style.color = '#E3C275';
+    msg.classList.add('show');
+    form.reset();
+  });
+}
+
+/* ============================================================
+   SCROLL EFFECTS: BACK TO TOP
+   ============================================================ */
+function setupScrollEffects(){
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 600){ btn.classList.add('show'); } else { btn.classList.remove('show'); }
+  });
+  btn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+}
+
+/* ============================================================
+   FONT SIZE TOGGLE
+   ============================================================ */
+function setupFontSize(){
+  const steps = [87.5, 100, 112.5, 125];
+  let stepIndex = 1;
+  function apply(){ document.documentElement.style.fontSize = steps[stepIndex] + '%'; }
+  document.getElementById('fontInc').addEventListener('click', () => {
+    stepIndex = Math.min(stepIndex + 1, steps.length - 1);
+    apply();
+  });
+  document.getElementById('fontDec').addEventListener('click', () => {
+    stepIndex = Math.max(stepIndex - 1, 0);
+    apply();
+  });
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+function setupDarkMode(){
+  const btn = document.getElementById('darkToggle');
+  const icon = document.getElementById('darkIcon');
+  const sun = `<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>`;
+  const moon = `<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>`;
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    icon.innerHTML = isDark ? sun : moon;
+  });
+}
+
+/* ============================================================
+   LANGUAGE TOGGLE
+   ============================================================ */
+let currentLang = 'en';
+function setupLangToggle(){
+  document.getElementById('langToggle').addEventListener('click', () => {
+    currentLang = currentLang === 'en' ? 'bn' : 'en';
+    document.documentElement.lang = currentLang;
+    document.querySelectorAll('[data-en][data-bn]').forEach(el => {
+      el.textContent = currentLang === 'bn' ? el.dataset.bn : el.dataset.en;
+    });
+    renderFilters();
+    renderNewsGrid();
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+  updateDateTime();
+  renderTicker();
+  renderHero();
+  renderFilters();
+  renderNewsGrid();
+  renderNotices();
+  renderMostRead('today');
+  renderEvents();
+  renderGallery();
+  setupNav();
+  setupSearch();
+  setupModals();
+  setupMostReadTabs();
+  setupNewsletter();
+  setupScrollEffects();
+  setupFontSize();
+  setupDarkMode();
+  setupLangToggle();
+  animateStats();
+});
+</script>
+</body>
+</html>
